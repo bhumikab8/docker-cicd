@@ -1,0 +1,18 @@
+name: Docker CI
+on: [push] # Triggers every time you push code
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t my-app:latest .
+
+      - name: Verify Container Runs
+        run: |
+          docker run -d -p 3000:3000 --name test-container my-app:latest
+          sleep 5
+          curl localhost:3000 | grep "Hello, CI/CD World!"
